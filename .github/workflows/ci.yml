@@ -1,0 +1,31 @@
+# Injected automatically. Do not edit.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [19]
+        
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Task
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{matrix.node-version}}
+          cache: "npm"
+      - run: npm ci
+      - run: task lint
+      - run: task build
+      - run: task test
