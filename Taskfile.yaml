@@ -1,0 +1,46 @@
+# https://taskfile.dev
+version: '3'
+
+tasks:
+  npm:install:
+    desc: Install packages
+    cmds:
+      - npm install
+    sources:
+      - package.json
+      - package-lock.json
+    generates:
+      - ./node_modules/**/*
+
+  test:
+    desc: Run tests
+    deps:
+      - npm:install
+      - build
+    cmds:
+      - node --enable-source-maps --test
+
+  lint:
+    deps:
+      - npm:install
+    desc: Lint the app
+    cmds:
+      - npx eslint --ext .ts --ext .tsx --ext .js --ext .jsx src/
+
+  fix:
+    desc: Lint the app and fix anything that can be automatically fixed
+    deps:
+      - npm:install
+    cmds:
+      - npx eslint --ext .ts --ext .tsx --ext .js --ext .jsx --fix src/
+
+  build:
+    desc: Build the project
+    deps:
+      - npm:install
+    cmds:
+      - npx tsc
+    sources:
+      - "**/*.{ts,js,tsx,jsx}"
+    generates:
+      - dist/**/*
