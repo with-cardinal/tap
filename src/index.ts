@@ -2,10 +2,14 @@
 
 import { Parser } from "tap-parser";
 import chalk from "chalk";
+import parseArgs from "minimist";
+import { writeMarkdown } from "./markdown.js";
 
 let pass = 0;
 let fail = 0;
 let duration: number | undefined = undefined;
+let md = false;
+const results: Result[] = [];
 
 function completeFn() {
   console.log();
@@ -24,9 +28,13 @@ function completeFn() {
   }
 
   console.log(summary.join(", "));
+
+  if (md) {
+    writeMarkdown(pass, fail, duration, results);
+  }
 }
 
-type Result = {
+export type Result = {
   ok: boolean;
   name: string;
   diag?: { duration_ms?: number; error?: string; stack?: string };
@@ -34,8 +42,13 @@ type Result = {
 };
 
 function resultFn(assert: Result) {
+  if (md) {
+    results.push(assert);
+  }
+
   if (assert.ok) {
     process.stdout.write(chalk.green("."));
+
     pass++;
   } else {
     console.log(chalk.red("x"));
@@ -58,10 +71,30 @@ function rootAssertFn(assert: RootAssert) {
   duration = assert.diag?.duration_ms;
 }
 
-const parser = new Parser(completeFn);
+function main() {
+  const argv = parseArgs(process.argv.slice(2));
 
-parser.on("result", resultFn);
-parser.on("assert", rootAssertFn);
+  if (argv["help"]) {
+    console.log();
+    console.log("tap - Cardinal's Test Anything Protocol Reporter");
+    console.log();
+    console.log("Options:");
+    console.log("  --help\tPrint this message");
+    console.log("  --md\t\tWrite markdown output to test-results.md");
+    return;
+  }
 
-console.log();
-process.stdin.pipe(parser);
+  if (argv["md"]) {
+    md = true;
+  }
+
+  const parser = new Parser(completeFn);
+
+  parser.on("result", resultFn);
+  parser.on("assert", rootAssertFn);
+
+  console.log();
+  process.stdin.pipe(parser);
+}
+
+main();
