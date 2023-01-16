@@ -29,6 +29,6 @@ jobs:
       - run: task lint
       - run: task build
       - run: task test
-      - run: 
+      - run: |
           touch test-results.md
           test-results.md 2>/dev/null >> $GITHUB_STEP_SUMMARY
