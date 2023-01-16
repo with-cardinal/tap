@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Parser } from "tap-parser";
 import chalk from "chalk";
 

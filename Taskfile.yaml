@@ -40,6 +40,7 @@ tasks:
       - npm:install
     cmds:
       - npx tsc
+      - chmod +x dist/index.js
     sources:
       - "**/*.{ts,js,tsx,jsx}"
     generates:
