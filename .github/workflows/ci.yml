@@ -31,4 +31,4 @@ jobs:
       - run: task test
       - run: |
           touch test-results.md
-          test-results.md 2>/dev/null >> $GITHUB_STEP_SUMMARY
+          cat test-results.md 2>/dev/null >> $GITHUB_STEP_SUMMARY
