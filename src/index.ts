@@ -9,6 +9,7 @@ let pass = 0;
 let fail = 0;
 let duration: number | undefined = undefined;
 let md = false;
+let comments = false;
 const results: Result[] = [];
 
 function completeFn() {
@@ -22,9 +23,10 @@ function completeFn() {
   }
 
   summary.push(chalk.green(`${pass} passing`));
+  summary.push(chalk.blue(`${pass + fail} total`));
 
   if (duration) {
-    summary.push(chalk.green(`${duration}ms`));
+    summary.push(chalk.white(`${duration}ms`));
   }
 
   console.log(summary.join(", "));
@@ -51,10 +53,8 @@ function resultFn(assert: Result) {
 
     pass++;
   } else {
-    console.log(chalk.red("x"));
-
     console.log();
-    console.log(`${assert.name} - ${assert.fullname}`);
+    console.log(`${chalk.red("x")} ${assert.name} - ${assert.fullname}`);
     console.log(`  Error: ${assert.diag?.error}`);
     console.log(`  at ${assert.diag?.stack?.split("\n").join("\n    ")}`);
     console.log();
@@ -71,6 +71,16 @@ function rootAssertFn(assert: RootAssert) {
   duration = assert.diag?.duration_ms;
 }
 
+function childFn(child: Parser) {
+  child.on("child", childFn);
+
+  if (comments) {
+    child.on("comment", (comment: string) => {
+      console.log(comment.replace("#", chalk.yellow("#")));
+    });
+  }
+}
+
 function main() {
   const argv = parseArgs(process.argv.slice(2));
 
@@ -80,6 +90,7 @@ function main() {
     console.log();
     console.log("Options:");
     console.log("  --help\tPrint this message");
+    console.log("  --comments\tPrint tap comments");
     console.log("  --md\t\tWrite markdown output to test-results.md");
     return;
   }
@@ -88,12 +99,16 @@ function main() {
     md = true;
   }
 
+  if (argv["comments"]) {
+    comments = true;
+  }
+
   const parser = new Parser(completeFn);
 
   parser.on("result", resultFn);
   parser.on("assert", rootAssertFn);
+  parser.on("child", childFn);
 
-  console.log();
   process.stdin.pipe(parser);
 }
 
