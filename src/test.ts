@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { ProcessResult, run } from "@withcardinal/ts-std";
+import { ProcessResult, run } from "./run.js";
 
 function runTestCase(testCase: string): Promise<ProcessResult> {
   return run(
