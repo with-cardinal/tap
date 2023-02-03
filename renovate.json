@@ -22,6 +22,6 @@
       "matchDepTypes": ["devDependencies"],
       "automerge": true
     }
-  ]
-
+  ],
+  "timezone": "America/New_York"
 }
