@@ -1,0 +1,42 @@
+// Injected automatically. Do not edit.
+// 
+// Install required packages:
+// npm install -E -D typescript @types/node
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node",
+  "compilerOptions": {
+    "lib": [
+      "es2022"
+    ],
+    "module": "ESNext",
+    "target": "es2022",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "importsNotUsedAsValues": "error",
+    "checkJs": true,
+    "sourceMap": true,
+    "outDir": "dist/",
+    "declaration": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "dist/**",
+    "node_modules"
+  ]
+}
